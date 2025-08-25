@@ -1,6 +1,12 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi.responses import PlainTextResponse
 
 app = FastAPI()
+
+@app.get("/")
+async def root():
+    return PlainTextResponse("WebSocket server is running!")
+
 
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
