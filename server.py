@@ -5,7 +5,7 @@ app = FastAPI()
 
 @app.get("/")
 async def root():
-    return PlainTextResponse("WebSocket server is running!")
+    return {"message": "WebSocket server is running"}
 
 
 @app.websocket("/ws")
