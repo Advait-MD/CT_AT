@@ -1,14 +1,17 @@
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from pydantic import BaseModel
 import google.generativeai as genai
+from dotenv import load_dotenv
 import os
 import json
+
+load_dotenv()
 
 # Initialize FastAPI app
 app = FastAPI(title="Gemini API with FastAPI")
 
 # Configure Gemini API (replace with your actual API key)
-genai.configure(api_key="AIzaSyA9ZsXKBRcwNxFPazY4Cfe7f2lBbZeaHrI")
+api_key = os.getenv("API_KEY") 
 
 # Define request model for HTTP
 class UserPrompt(BaseModel):
@@ -24,7 +27,7 @@ async def root():
 async def generate_response(user_prompt: UserPrompt):
     try:
         # Initialize Gemini model
-        model = genai.GenerativeModel('gemini-pro')
+        model = genai.GenerativeModel('gemini-2.0-flash')
         
         # Generate response from Gemini
         response = model.generate_content(user_prompt.prompt)
@@ -54,7 +57,7 @@ async def websocket_gemini_endpoint(websocket: WebSocket):
                     continue
                 
                 # Initialize Gemini model
-                model = genai.GenerativeModel('gemini-pro')
+                model = genai.GenerativeModel('gemini-2.0-flash')
                 
                 # Generate response
                 response = model.generate_content(prompt)
