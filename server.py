@@ -16,6 +16,6 @@ async def websocket_endpoint(websocket: WebSocket):
         while True:
             data = await websocket.receive_text()
             print(f"Received from client: {data}")
-            await websocket.send_text(f"Echo: {data}")  # reply back
+            await websocket.send_text(f"Vesper: {data}")  # reply back
     except Exception as e:
         print("connection closed", e)
