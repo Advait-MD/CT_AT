@@ -3,3 +3,5 @@ uvicorn[standard]
 pydantic
 WebSocket
 fastapi.responses
+python-dotenv
+google-generativeai
