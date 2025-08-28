@@ -26,41 +26,24 @@ async def websocket_endpoint(websocket: WebSocket):
                 prompt = prompt_data.get("prompt", "")
 
                 if not prompt:
-                    await websocket.send_json({
-                        "prompt": "",
-                        "response": "",
-                        "error": "No prompt provided"
-                    })
+                    await websocket.send_json({"error": "No prompt provided"})
                     continue
 
-                # Call Gemini safely (run blocking in thread)
-                model = genai.GenerativeModel('gemini-2.0-flash')
-                response = await asyncio.to_thread(model.generate_content, prompt)
+                # Gemini async call
+                model = genai.GenerativeModel("gemini-2.0-flash")
+                response = await model.generate_content_async(prompt)
 
-                # Ensure safe string response
-                reply_text = getattr(response, "text", None)
-                if not reply_text:
-                    reply_text = str(response)
+                # Extract safe text
+                response_text = getattr(response, "text", str(response))
 
                 await websocket.send_json({
                     "prompt": prompt,
-                    "response": reply_text,
-                    "error": None
+                    "response": response_text
                 })
-
             except json.JSONDecodeError:
-                await websocket.send_json({
-                    "prompt": "",
-                    "response": "",
-                    "error": "Invalid JSON format"
-                })
+                await websocket.send_json({"error": "Invalid JSON format"})
             except Exception as e:
-                await websocket.send_json({
-                    "prompt": "",
-                    "response": "",
-                    "error": str(e)
-                })
-
+                await websocket.send_json({"error": str(e)})
     except WebSocketDisconnect:
         print("connection closed")
     except Exception as e:
