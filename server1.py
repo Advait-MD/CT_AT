@@ -9,7 +9,9 @@ from dotenv import load_dotenv
 
 app = FastAPI()
 
+load_dotenv()
 api_key = os.getenv("API_KEY") 
+genai.configure(api_key=api_key)
 
 @app.get("/")
 async def root():
